@@ -3,10 +3,17 @@ import ReactDOM from "react-dom";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
+import { deepPurple, amber } from "@material-ui/core/colors";
 
 const theme = createMuiTheme({
   palette: {
     type: "dark",
+  },
+  primary: {
+    main: deepPurple[400],
+  },
+  secondary: {
+    main: amber[800],
   },
 });
 
