@@ -4,7 +4,7 @@ const Message = require("./models/message");
 const Schema = mongoose.Schema;
 
 const groupSchema = new Schema({
-  users: [
+  members: [
     {
       type: Schema.Types.ObjectId,
       ref: "User",
