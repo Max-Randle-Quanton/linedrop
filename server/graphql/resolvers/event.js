@@ -1,13 +1,13 @@
 const Event = require("../../models/event");
 const User = require("../../models/user");
-const { transformEvent } = require("./merge");
+const { enrichEvent } = require("./merge");
 
 const dummyUser = "5fd00e6692b78d454cc3ca47";
 
 const findAllEvents = async () => {
   try {
     const events = await Event.find();
-    return events.map((event) => transformEvent(event));
+    return events.map((event) => enrichEvent(event));
   } catch (err) {
     throw err;
   }
@@ -30,7 +30,7 @@ const createEvent = async (args) => {
     }
     creator.createdEvents.push(createdEvent);
     await creator.save();
-    return transformEvent(createdEvent);
+    return enrichEvent(createdEvent);
   } catch (err) {
     throw err;
   }

@@ -1,11 +1,11 @@
 const bcrypt = require("bcryptjs");
 const User = require("../../models/user");
-const { transformUser } = require("./merge");
+const { enrichUser } = require("./merge");
 
 const findAllUsers = async () => {
   try {
     const users = await User.find();
-    return users.map((user) => transformUser(user));
+    return users.map((user) => enrichUser(user));
   } catch (err) {
     throw err;
   }

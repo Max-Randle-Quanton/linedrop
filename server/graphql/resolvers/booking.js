@@ -1,6 +1,6 @@
 const Booking = require("../../models/booking");
 const Event = require("../../models/event");
-const { transformEvent, transformBooking } = require("./merge");
+const { enrichEvent, enrichBooking } = require("./merge");
 
 const dummyUser = "5fd00e6692b78d454cc3ca47";
 
@@ -9,7 +9,7 @@ const dummyUser = "5fd00e6692b78d454cc3ca47";
 const findAllBookings = async () => {
   try {
     const bookings = await Booking.find();
-    return bookings.map((booking) => transformBooking(booking));
+    return bookings.map((booking) => enrichBooking(booking));
   } catch (err) {
     throw err;
   }
@@ -23,7 +23,7 @@ const createBooking = async (args) => {
       event: event,
     });
     const createdBooking = await newBooking.save();
-    return transformBooking(createdBooking);
+    return enrichBooking(createdBooking);
   } catch (err) {
     throw err;
   }
@@ -37,7 +37,7 @@ const cancelBooking = async (args) => {
       throw new Error("Booking not found.");
     }
     booking.delete();
-    const event = transformEvent(transformBooking(booking).event);
+    const event = enrichEvent(enrichBooking(booking).event);
     return event;
   } catch (err) {
     throw err;

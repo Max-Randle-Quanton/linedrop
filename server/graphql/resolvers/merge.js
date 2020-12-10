@@ -4,21 +4,21 @@ const Event = require("../../models/event");
 const User = require("../../models/user");
 const { dbDateToString } = require("../../helpers");
 
-// the transform functions populate links within a document with the rich document data that they are referencing
+// the enrich functions populate links within a document with the document that they are referencing
 // they also map some database types into more easily consumable ones, eg dbDate in milliseconds to an ISO string
-const transformUser = (user) => ({
+const enrichUser = (user) => ({
   ...user._doc,
   password: null,
   createdEvents: () => findEventsByIds(user._doc.createdEvents),
 });
 
-const transformEvent = (event) => ({
+const enrichEvent = (event) => ({
   ...event._doc,
   date: dbDateToString(event._doc.date),
   creator: () => findUserById(event._doc.creator),
 });
 
-const transformBooking = (booking) => ({
+const enrichBooking = (booking) => ({
   ...booking._doc,
   user: () => findUserById(booking._doc.user),
   event: () => findEventById(booking._doc.event),
@@ -29,7 +29,7 @@ const transformBooking = (booking) => ({
 const findEventById = async (eventId) => {
   try {
     const event = await Event.findById(eventId);
-    return transformEvent(event);
+    return enrichEvent(event);
   } catch (err) {
     throw err;
   }
@@ -38,7 +38,7 @@ const findEventById = async (eventId) => {
 const findEventsByIds = async (eventIds) => {
   try {
     const events = await Event.find({ _id: { $in: eventIds } });
-    return events.map((event) => transformEvent(event));
+    return events.map((event) => enrichEvent(event));
   } catch (err) {
     throw err;
   }
@@ -47,12 +47,12 @@ const findEventsByIds = async (eventIds) => {
 const findUserById = async (userId) => {
   try {
     const user = await User.findById(userId);
-    return transformUser(user);
+    return enrichUser(user);
   } catch (err) {
     throw err;
   }
 };
 
-exports.transformEvent = transformEvent;
-exports.transformBooking = transformBooking;
-exports.transformUser = transformUser;
+exports.enrichEvent = enrichEvent;
+exports.enrichBooking = enrichBooking;
+exports.enrichUser = enrichUser;
