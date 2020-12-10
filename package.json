@@ -19,6 +19,7 @@
     "git": "^0.1.5",
     "graphql": "^15.4.0",
     "helmet": "^4.2.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.3",
     "morgan": "^1.10.0",
     "react": "^17.0.1",

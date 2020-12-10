@@ -6,7 +6,7 @@ const morgan = require("morgan");
 const { graphqlHTTP } = require("express-graphql");
 require("dotenv").config();
 
-const graphQlSchema = require("./graphql/schema/index");
+const graphQlSchema = require("./graphql/schema");
 const graphQlResolvers = require("./graphql/resolvers/index");
 
 // constants
