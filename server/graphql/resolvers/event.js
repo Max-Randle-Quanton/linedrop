@@ -13,7 +13,10 @@ const findAllEvents = async () => {
   }
 };
 
-const createEvent = async (args) => {
+const createEvent = async (args, req) => {
+  if (!req.isAuth) {
+    throw new Error("Unauthenticated request");
+  }
   try {
     const event = new Event({
       title: args.eventInput.title,

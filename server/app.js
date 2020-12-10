@@ -4,6 +4,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const { graphqlHTTP } = require("express-graphql");
+const isAuth = require("./middleware/is-auth");
 require("dotenv").config();
 
 const graphQlSchema = require("./graphql/schema");
@@ -22,6 +23,7 @@ app.use(helmet({ contentSecurityPolicy: __prod__ ? undefined : false }));
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
+app.use(isAuth());
 
 // serve staic html
 app.use(express.static("build"));
