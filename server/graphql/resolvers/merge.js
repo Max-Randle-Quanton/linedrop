@@ -1,15 +1,32 @@
 // for merging data types together based on their relationships
 
-const Event = require("../../models/event");
 const User = require("../../models/user");
+const Group = require("../../models/group");
+const Event = require("../../models/event");
 const { dbDateToString } = require("../../helpers");
 
-// the enrich functions populate links within a document with the document that they are referencing
-// they also map some database types into more easily consumable ones, eg dbDate in milliseconds to an ISO string
+// every document that is sent out must be passed through an enrich function
+// the enrich functions have 3 important jobs:
+// populate links within a document with the document that they are referencing
+// map some database types into more easily consumable ones
+// sterilise document of any sensitive data before it is sent out
+
 const enrichUser = (user) => ({
   ...user._doc,
-  password: null,
+  password: null, // obscure password hash
+  groups: null, // obscure groups
   createdEvents: () => findEventsByIds(user._doc.createdEvents),
+});
+
+const enrichGroup = (group) => ({
+  ...group._doc,
+  users: () => findUsersByIds(group._doc.users),
+  messages: group._doc.messages.map((message) => ({
+    ...message._doc,
+    author: () => enrichUser(message._doc.author),
+    createdAt: dbDateToString(message._doc.createdAt),
+    updatedAt: dbDateToString(message._doc.updatedAt),
+  })),
 });
 
 const enrichEvent = (event) => ({
@@ -25,6 +42,15 @@ const enrichBooking = (booking) => ({
   createdAt: dbDateToString(booking._doc.createdAt),
   updatedAt: dbDateToString(booking._doc.updatedAt),
 });
+
+const findUsersByIds = async (userIds) => {
+  try {
+    const users = await User.find({ _id: { $in: userIds } });
+    return users.map((user) => enrichUser(user));
+  } catch (err) {
+    throw err;
+  }
+};
 
 const findEventById = async (eventId) => {
   try {
@@ -53,6 +79,7 @@ const findUserById = async (userId) => {
   }
 };
 
+exports.enrichUser = enrichUser;
+exports.enrichGroup = enrichGroup;
 exports.enrichEvent = enrichEvent;
 exports.enrichBooking = enrichBooking;
-exports.enrichUser = enrichUser;

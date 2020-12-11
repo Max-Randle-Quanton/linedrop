@@ -1,7 +1,20 @@
 const mongoose = require("mongoose");
-const Message = require("./models/message");
 
 const Schema = mongoose.Schema;
+
+const messageSchema = new Schema(
+  {
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    text: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
 const groupSchema = new Schema({
   members: [
@@ -10,12 +23,7 @@ const groupSchema = new Schema({
       ref: "User",
     },
   ],
-  messages: [
-    {
-      type: Message,
-      required: true,
-    },
-  ],
+  messages: [messageSchema],
 });
 
 module.exports = mongoose.model("Group", groupSchema);

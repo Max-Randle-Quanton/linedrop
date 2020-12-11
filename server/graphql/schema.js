@@ -1,6 +1,28 @@
 const { buildSchema } = require("graphql");
 
 module.exports = buildSchema(`
+    type User {
+        _id: ID!
+        username: String!
+        password: String
+        createdEvents: [Event!]
+        Groups: [Group!]
+    }
+
+    type Group {
+        _id: ID!
+        members: [User!]!
+        messages: [Message]!
+    }
+
+    type Message {
+        _id: ID!
+        author: User!
+        text: String!
+        createdAt: String!
+        updatedAt: String!
+    }
+
     type Booking {
         _id: ID!
         event: Event!
@@ -18,6 +40,12 @@ module.exports = buildSchema(`
         creator: User!
     }
 
+    type AuthData {
+        userId: ID!
+        token: String!
+        tokenExpiration: Int!
+    }
+
     input EventInput {
         title: String!
         description: String!
@@ -25,60 +53,31 @@ module.exports = buildSchema(`
         date: String!
     }
 
-    type User {
-        _id: ID!
-        username: String!
-        password: String
-        createdEvents: [Event!]
-        Groups: [Group!]
-    }
     input UserInput {
         username: String!
         password: String!
     }
 
-    type AuthData {
-        userId: ID!
-        token: String!
-        tokenExpiration: Int!
-    }
-
-    type Group {
-        _id: ID!
-        members: [User!]!
-        messages: [Message!]
-    }
-    input GroupInput {
-        members: [ID!]!
-    }
-
-    type Message {
-        _id: ID!
-        author: User!
-        text: String!
-        date: String!
-    }
-    input MessageInput {
-        group: ID!
-        text: String!
-    }
-
     type RootQuery {
-        events: [Event!]!
-        bookings: [Booking!]!
         users: [User!]!
         groups: [Group]!
         login(username: String!, password: String!): AuthData!
+
+        events: [Event!]!
+        bookings: [Booking!]!
     }   
+
     type RootMutation {
+        createUser(userInput: UserInput): User!
+        createGroup(members: [ID!]!): Group!
+        createMessage(group: ID!, text: String!): Message!
+
         createEvent(eventInput: EventInput): Event
-        createUser(userInput: UserInput): User
         bookEvent(eventId: ID!): Booking!
         cancelBooking(bookingId: ID!): Event!
         
-        createGroup(groupInput: GroupInput): Group
-        createMessage(messageInput: MessageInput): Message
     }
+
     schema {
         query: RootQuery
         mutation: RootMutation

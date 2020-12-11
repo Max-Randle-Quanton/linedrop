@@ -30,8 +30,7 @@ const createUser = async (args) => {
     });
     // save user as a document in the users collection
     const createdUser = await newUser.save();
-    // obscure password hash before returning
-    return { ...createdUser._doc, password: null };
+    return enrichUser(createdUser);
   } catch (err) {
     throw err;
   }
@@ -50,11 +49,13 @@ const login = async ({ username, password }) => {
       throw new Error("Invalid credentials.");
     }
 
+    // generate a token
     const token = jwt.sign(
       { userId: user.id, username: user.username },
       jwtSecretString,
       { expiresIn: "12h" }
     );
+
     return { userId: user.id, token, tokenExpiration: 12 };
   } catch (err) {
     throw err;

@@ -8,7 +8,18 @@ const isAuth = require("./middleware/is-auth");
 require("dotenv").config();
 
 const graphQlSchema = require("./graphql/schema");
-const graphQlResolvers = require("./graphql/resolvers/index");
+
+const authResolver = require("./graphql/resolvers/auth");
+const eventResolver = require("./graphql/resolvers/event");
+const bookingResolver = require("./graphql/resolvers/booking");
+const groupResolver = require("./graphql/resolvers/group");
+
+const graphQlResolvers = {
+  ...authResolver,
+  ...eventResolver,
+  ...bookingResolver,
+  ...groupResolver,
+};
 
 // constants
 const __prod__ = process.env.NODE_ENV === "production";

@@ -2,8 +2,6 @@ const Event = require("../../models/event");
 const User = require("../../models/user");
 const { enrichEvent } = require("./merge");
 
-const dummyUser = "5fd00e6692b78d454cc3ca47";
-
 const findAllEvents = async () => {
   try {
     const events = await Event.find();
@@ -15,7 +13,7 @@ const findAllEvents = async () => {
 
 const createEvent = async (args, req) => {
   if (!req.isAuth) {
-    throw new Error("Unauthenticated request");
+    throw new Error("Unauthenticated request to a restricted resource.");
   }
   try {
     const event = new Event({
@@ -23,11 +21,11 @@ const createEvent = async (args, req) => {
       description: args.eventInput.description,
       price: +args.eventInput.price,
       date: args.eventInput.date,
-      creator: dummyUser, // hard code for now
+      creator: req.userId, // hard code for now
     });
     const createdEvent = await event.save();
     // update the createdEvents list for the user that created the event
-    const creator = await User.findById(dummyUser); // hard code for now
+    const creator = await User.findById(req.userId); // hard code for now
     if (!creator) {
       throw new Error("User not found");
     }
