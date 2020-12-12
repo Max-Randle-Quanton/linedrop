@@ -1,6 +1,7 @@
 # Welcome to LineDrop
 
-[live version](https://line-drop.herokuapp.com/)
+### [live version](https://line-drop.herokuapp.com/)
+
 LineDrop is a messaging app that I am building for learning purposes. The final solution implements some really cool concepts and ideas, many of which are new to me.
 
 ## key concepts
