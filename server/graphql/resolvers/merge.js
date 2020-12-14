@@ -43,6 +43,13 @@ const enrichBooking = (booking) => ({
   updatedAt: dbDateToString(booking._doc.updatedAt),
 });
 
+const enrichMessage = (message) => ({
+  ...message._doc,
+  author: () => findUserById(message._doc.author),
+  createdAt: dbDateToString(message._doc.createdAt),
+  updatedAt: dbDateToString(message._doc.updatedAt),
+});
+
 const findUsersByIds = async (userIds) => {
   try {
     const users = await User.find({ _id: { $in: userIds } });
@@ -83,3 +90,4 @@ exports.enrichUser = enrichUser;
 exports.enrichGroup = enrichGroup;
 exports.enrichEvent = enrichEvent;
 exports.enrichBooking = enrichBooking;
+exports.enrichMessage = enrichMessage;

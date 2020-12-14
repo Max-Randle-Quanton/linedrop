@@ -6,7 +6,10 @@ require("dotenv").config();
 
 const jwtSecretString = process.env.JWT_SECRET_STRING;
 
-const findAllUsers = async () => {
+const findAllUsers = async (args, req) => {
+  if (!req.isAuth) {
+    throw new Error("Unauthenticated request to a restricted resource.");
+  }
   try {
     const users = await User.find();
     return users.map((user) => enrichUser(user));
@@ -15,17 +18,17 @@ const findAllUsers = async () => {
   }
 };
 
-const createUser = async (args) => {
+const createUser = async ({ username, password }) => {
   try {
     // check username exists already
-    const user = await User.findOne({ username: args.userInput.username });
+    const user = await User.findOne({ username });
     if (user) {
       throw new Error("Username is taken.");
     }
     // generate password hash
-    const passwordHash = await bcrypt.hash(args.userInput.password, 12);
+    const passwordHash = await bcrypt.hash(password, 12);
     const newUser = new User({
-      username: args.userInput.username,
+      username,
       password: passwordHash,
     });
     // save user as a document in the users collection
@@ -50,11 +53,7 @@ const login = async ({ username, password }) => {
     }
 
     // generate a token
-    const token = jwt.sign(
-      { userId: user.id, username: user.username },
-      jwtSecretString,
-      { expiresIn: "12h" }
-    );
+    const token = jwt.sign({ userId: user.id, username: user.username }, jwtSecretString, { expiresIn: "12h" });
 
     return { userId: user.id, token, tokenExpiration: 12 };
   } catch (err) {
