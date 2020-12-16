@@ -46,14 +46,17 @@ const login = async ({ username, password }) => {
       throw new Error("User does not exist");
     }
     const isPasswordMatch = await bcrypt.compare(password, user.password);
-    // const passwordHash = await bcrypt.hash(password, 12);
 
     if (!isPasswordMatch) {
       throw new Error("Invalid credentials.");
     }
 
     // generate a token
-    const token = jwt.sign({ userId: user.id, username: user.username }, jwtSecretString, { expiresIn: "12h" });
+    const token = jwt.sign(
+      { userId: user.id, username: user.username },
+      jwtSecretString,
+      { expiresIn: "12h" }
+    );
 
     return { userId: user.id, token, tokenExpiration: 12 };
   } catch (err) {
