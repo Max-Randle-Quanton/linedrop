@@ -1,7 +1,9 @@
 import React, { useMemo } from "react";
-import { Button, Container, useMediaQuery } from "@material-ui/core";
+import { Container, useMediaQuery } from "@material-ui/core";
 import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
 import { deepPurple, amber } from "@material-ui/core/colors";
+import { BrowserRouter, Route } from "react-router-dom";
+import LoginPage from "./LoginPage";
 
 const App = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -26,9 +28,10 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container>
-        <Button variant="outlined" color="secondary">
-          leshko
-        </Button>
+        <BrowserRouter>
+          <Route path="/" exact component={() => <></>} />
+          <Route path="/login" exact component={() => <LoginPage />} />
+        </BrowserRouter>
       </Container>
     </ThemeProvider>
   );
