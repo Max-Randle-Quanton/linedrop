@@ -31,7 +31,6 @@ const FormBase = ({
 
   return (
     <WrapperComponent
-      renderTitle={}
       renderFields={populateFields({
         fieldset,
         formData,
@@ -40,6 +39,11 @@ const FormBase = ({
         className,
         ...rest,
       })}
+      disabled={fieldset.map((fieldName) =>
+        fieldsetDescriptor[fieldName].validationTests.some(
+          ({ test, feedback }) => !test(formData)
+        )
+      )}
     />
   );
 };
