@@ -53,11 +53,6 @@ module.exports = buildSchema(`
         date: String!
     }
 
-    input UserInput {
-        username: String!
-        password: String!
-    }
-
     type RootQuery {
         users: [User!]!
         groups: [Group]!
@@ -68,9 +63,9 @@ module.exports = buildSchema(`
     }   
 
     type RootMutation {
-        createUser(userInput: UserInput): User!
+        createUser(username: String! password: String!): User!
         createGroup(members: [ID!]!): Group!
-        createMessage(group: ID!, text: String!): Message!
+        createMessage(groupId: ID!, text: String!): Message!
 
         createEvent(eventInput: EventInput): Event
         bookEvent(eventId: ID!): Booking!

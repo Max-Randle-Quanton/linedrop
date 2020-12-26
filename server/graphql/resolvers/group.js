@@ -1,6 +1,6 @@
 const Group = require("../../models/group");
 const User = require("../../models/user");
-const { enrichGroup } = require("./merge");
+const { enrichGroup, enrichMessage } = require("./merge");
 
 const findGroupsForCurrentUser = async (args, req) => {
   try {
@@ -20,8 +20,13 @@ const createGroup = async ({ members }, req) => {
     if (!req.isAuth) {
       throw new Error("Unauthenticated request to a restricted resource.");
     }
+    if (!members.includes(req.userId)) {
+      members = [...members, req.userId]; // add the user who created it into the group
+    }
+    // get distinct members array
+    members = members.filter((value, index, self) => self.indexOf(value) === index);
     const newGroup = new Group({
-      members: [...members, req.userId], // add the user who created it into the group
+      members,
       messages: [],
     });
     const user = await User.findById(req.userId);
@@ -34,7 +39,27 @@ const createGroup = async ({ members }, req) => {
   }
 };
 
+const createMessage = async ({ groupId, text }, req) => {
+  try {
+    if (!req.isAuth) {
+      throw new Error("Unauthenticated request to a restricted resource.");
+    }
+    const user = User.findById(req.userId);
+    if (!user.groups.includes(req.userId)) {
+      throw new Error("User does not belong to the target group.");
+    }
+    const group = await Group.findById(groupId);
+    group.messages.push({ author: req.userId, text });
+    const returnedGroup = await group.save();
+    const [createdMessage] = returnedGroup.messages.slice(-1);
+    return enrichMessage(createdMessage);
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   groups: findGroupsForCurrentUser,
   createGroup,
+  createMessage,
 };

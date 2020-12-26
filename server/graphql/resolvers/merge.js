@@ -1,7 +1,6 @@
 // for merging data types together based on their relationships
 
 const User = require("../../models/user");
-const Group = require("../../models/group");
 const Event = require("../../models/event");
 const { dbDateToString } = require("../../helpers");
 
@@ -20,13 +19,15 @@ const enrichUser = (user) => ({
 
 const enrichGroup = (group) => ({
   ...group._doc,
-  users: () => findUsersByIds(group._doc.users),
-  messages: group._doc.messages.map((message) => ({
-    ...message._doc,
-    author: () => enrichUser(message._doc.author),
-    createdAt: dbDateToString(message._doc.createdAt),
-    updatedAt: dbDateToString(message._doc.updatedAt),
-  })),
+  members: () => findUsersByIds(group._doc.members),
+  messages: group._doc.messages.map((message) => enrichMessage(message)),
+});
+
+const enrichMessage = (message) => ({
+  ...message._doc,
+  author: () => findUserById(message._doc.author),
+  createdAt: dbDateToString(message._doc.createdAt),
+  updatedAt: dbDateToString(message._doc.updatedAt),
 });
 
 const enrichEvent = (event) => ({
@@ -83,3 +84,4 @@ exports.enrichUser = enrichUser;
 exports.enrichGroup = enrichGroup;
 exports.enrichEvent = enrichEvent;
 exports.enrichBooking = enrichBooking;
+exports.enrichMessage = enrichMessage;
