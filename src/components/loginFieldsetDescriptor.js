@@ -6,11 +6,13 @@ export const blankForm = {
   username: "",
   password: "",
 };
-export const loginFormFieldsetDescriptor = {
+export const loginFieldsetDescriptor = {
   username: {
     displayName: "Username",
     displayValue: (data) => data.username,
-    inputComponent: FreeTextInput,
+    inputComponent: FreeTextInput,inputComponentProps: {
+      autoFocus: true,
+    },
     validationTests: [
       {
         test: (data) => data.username !== "",
@@ -23,7 +25,7 @@ export const loginFormFieldsetDescriptor = {
     displayName: "Password",
     displayValue: (data) => "",
     inputComponent: PasswordInput,
-    vaildationTests: [
+    validationTests: [
       {
         test: (data) => data.password !== "",
         feedback: "field is required",

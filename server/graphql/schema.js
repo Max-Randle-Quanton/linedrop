@@ -42,6 +42,7 @@ module.exports = buildSchema(`
 
     type AuthData {
         userId: ID!
+        username: String!
         token: String!
         tokenExpiration: Int!
     }
@@ -57,6 +58,7 @@ module.exports = buildSchema(`
         users: [User!]!
         groups: [Group]!
         login(username: String!, password: String!): AuthData!
+        verifyJwt(token: String!): User
 
         events: [Event!]!
         bookings: [Booking!]!

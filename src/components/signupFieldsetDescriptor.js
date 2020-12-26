@@ -13,6 +13,9 @@ export const signupFieldsetDescriptor = {
     displayName: "Username",
     displayValue: (data) => data.username,
     inputComponent: FreeTextInput,
+    inputComponentProps: {
+      autoFocus: true,
+    },
     validationTests: [
       {
         test: (data) => data.username !== "",

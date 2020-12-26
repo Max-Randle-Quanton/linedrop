@@ -21,6 +21,7 @@ const FormBase = ({
       renderFields={fieldset.map((fieldName) => {
         let helperText;
 
+
         // sets error to true if any tests fail
         // sets helper text to the feedback from the first test that failed
         const error = fieldsetDescriptor[fieldName].validationTests.some(
@@ -44,6 +45,7 @@ const FormBase = ({
           error,
           helperText,
           fullWidth: true,
+          ...fieldsetDescriptor[fieldName].inputComponentProps,
         });
       })}
       renderButton={
