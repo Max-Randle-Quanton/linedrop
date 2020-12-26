@@ -1,49 +1,62 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Box, makeStyles, Typography } from "@material-ui/core";
-import clsx from "clsx";
-import populateFields from "./populateFormFields";
-
-const useStyles = makeStyles((theme) => ({
-  flexColContainer: {
-    display: "flex",
-    flexDirection: "column",
-  },
-
-  flexColItem: {
-    marginBottom: theme.spacing(3),
-  },
-}));
 
 const FormBase = ({
   fieldset,
   initialData,
   fieldsetDescriptor,
-  onSubmit,
   disabledColumns,
-  className,
+  inputClassName,
   WrapperComponent,
+  FeedbackComponent,
+  ButtonComponent,
+  onSubmit,
   ...rest
 }) => {
-  const classes = useStyles();
   const [formData, setFormData] = useState(initialData);
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState();
 
   return (
     <WrapperComponent
-      renderFields={populateFields({
-        fieldset,
-        formData,
-        setFormData,
-        fieldsetDescriptor,
-        className,
-        ...rest,
+      renderFields={fieldset.map((fieldName) => {
+        let helperText;
+
+        // sets error to true if any tests fail
+        // sets helper text to the feedback from the first test that failed
+        const error = fieldsetDescriptor[fieldName].validationTests.some(
+          ({ test, feedback }) => {
+            const pass = test(formData);
+            if (!pass) {
+              helperText = feedback;
+            }
+            return !pass;
+          }
+        );
+
+        return fieldsetDescriptor[fieldName].inputComponent({
+          key: fieldName,
+          className: inputClassName,
+          name: fieldName,
+          label: fieldsetDescriptor[fieldName].displayName,
+          value: formData[fieldName],
+          onUpdate: (fieldName, fieldValue) =>
+            setFormData({ ...formData, [fieldName]: fieldValue }),
+          error,
+          helperText,
+          fullWidth: true,
+        });
       })}
-      disabled={fieldset.map((fieldName) =>
-        fieldsetDescriptor[fieldName].validationTests.some(
-          ({ test, feedback }) => !test(formData)
-        )
-      )}
+      renderButton={
+        <ButtonComponent
+          disabled={fieldset.some((fieldName) =>
+            fieldsetDescriptor[fieldName].validationTests.some(
+              ({ test, feedback }) => !test(formData)
+            )
+          )}
+          onClick={() => onSubmit(formData, setFeedback, setFeedback)}
+        />
+      }
+      renderFeedback={feedback && <FeedbackComponent message={feedback} />}
     />
   );
 };
@@ -52,6 +65,10 @@ FormBase.propTypes = {
   fieldset: PropTypes.arrayOf(PropTypes.string).isRequired,
   initialData: PropTypes.object,
   fieldsetDescriptor: PropTypes.object.isRequired,
+  inputClassName: PropTypes.string,
+  WrapperComponent: PropTypes.func.isRequired,
+  FeedbackComponent: PropTypes.func.isRequired,
+  ButtonComponent: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 

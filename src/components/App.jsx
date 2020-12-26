@@ -4,6 +4,7 @@ import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
 import { deepPurple, amber } from "@material-ui/core/colors";
 import { BrowserRouter, Route } from "react-router-dom";
 import LoginPage from "./LoginPage";
+import SignupPage from "./SignupPage";
 
 const App = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -29,7 +30,8 @@ const App = () => {
       <CssBaseline />
       <Container>
         <BrowserRouter>
-          <Route path="/" exact component={() => <></>} />
+          {/* <Route path="/" exact component={() => <>gfdgfd</>} /> */}
+          <Route path="/" exact component={() => <SignupPage />} />
           <Route path="/login" exact component={() => <LoginPage />} />
         </BrowserRouter>
       </Container>

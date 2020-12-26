@@ -6,13 +6,15 @@
 // error
 // helperText
 
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { TextField } from "@material-ui/core";
+import { IconButton, InputAdornment, TextField } from "@material-ui/core";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 
-export const FreeTextInput = ({ onUpdate, ...rest }) => (
+export const FreeTextInput = ({ onUpdate, helperText, ...rest }) => (
   <TextField
     onChange={(event) => onUpdate(event.target.name, event.target.value)}
+    helperText={helperText || " "}
     {...rest}
   />
 );
@@ -25,14 +27,29 @@ FreeTextInput.propTypes = {
   error: PropTypes.bool,
 };
 
-export const PasswordInput = ({ onUpdate, ...rest }) => (
-  <TextField
-    onChange={(event) => onUpdate(event.target.name, event.target.value)}
-    type="password"
-    {...rest}
-  />
-);
-
+export const PasswordInput = ({ onUpdate, helperText, ...rest }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  return (
+    <TextField
+      onChange={(event) => onUpdate(event.target.name, event.target.value)}
+      type={showPassword ? "text" : "password"}
+      helperText={helperText || " "}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <Visibility /> : <VisibilityOff />}
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+      {...rest}
+    />
+  );
+};
 PasswordInput.propTypes = {
   label: PropTypes.string,
   name: PropTypes.string.isRequired,

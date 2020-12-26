@@ -7,7 +7,8 @@ export const blankForm = {
   password: "",
   confirmPassword: "",
 };
-export const signupFormFieldsetDescriptor = {
+
+export const signupFieldsetDescriptor = {
   username: {
     displayName: "Username",
     displayValue: (data) => data.username,
@@ -23,11 +24,11 @@ export const signupFormFieldsetDescriptor = {
       },
       {
         test: (data) => data.username.length >= 3,
-        onFailFeedback: "too short",
+        feedback: "too short",
       },
       {
-        test: (data) => data.username.length >= 15,
-        onFailFeedback: "too long",
+        test: (data) => data.username.length <= 15,
+        feedback: "too long",
       },
     ],
   },
@@ -36,14 +37,18 @@ export const signupFormFieldsetDescriptor = {
     displayName: "Password",
     displayValue: (data) => "",
     inputComponent: PasswordInput,
-    vaildationTests: [
+    validationTests: [
       {
         test: (data) => data.password !== "",
         feedback: "field is required",
       },
       {
-        test: (data) => data.password.length >= 6,
+        test: (data) => data.password.length >= 5,
         feedback: "too short",
+      },
+      {
+        test: (data) => data.password.length <= 24,
+        feedback: "too long",
       },
       {
         test: (data) => data.password === data.confirmPassword,
@@ -56,14 +61,18 @@ export const signupFormFieldsetDescriptor = {
     displayName: "Confirm Password",
     displayValue: (data) => "",
     inputComponent: PasswordInput,
-    vaildationTests: [
+    validationTests: [
       {
         test: (data) => data.confirmPassword !== "",
         feedback: "field is required",
       },
       {
-        test: (data) => data.confirmPassword.length >= 6,
+        test: (data) => data.confirmPassword.length >= 5,
         feedback: "too short",
+      },
+      {
+        test: (data) => data.confirmPassword.length <= 24,
+        feedback: "too long",
       },
       {
         test: (data) => data.confirmPassword === data.password,
