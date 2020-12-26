@@ -6,12 +6,10 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Container,
   Divider,
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import clsx from "clsx";
 import FormBase from "./FormBase";
 import PropTypes from "prop-types";
 

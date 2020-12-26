@@ -58,7 +58,19 @@ const login = async ({ username, password }) => {
       { expiresIn: "12h" }
     );
 
-    return { userId: user.id, token, tokenExpiration: 12 };
+    return { userId: user.id, username, token, tokenExpiration: 12 };
+  } catch (err) {
+    throw err;
+  }
+};
+
+const verifyJwt = async ({ token }, req) => {
+  if (!req.isAuth) {
+    throw new Error("Invalid Token");
+  }
+  try {
+    const user = await User.findById(req.userId);
+    return enrichUser(user);
   } catch (err) {
     throw err;
   }
@@ -68,4 +80,5 @@ module.exports = {
   users: findAllUsers,
   createUser,
   login,
+  verifyJwt,
 };

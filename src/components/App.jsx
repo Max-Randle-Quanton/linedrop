@@ -2,9 +2,11 @@ import React, { useMemo } from "react";
 import { Container, useMediaQuery } from "@material-ui/core";
 import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
 import { deepPurple, amber } from "@material-ui/core/colors";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Redirect, Route } from "react-router-dom";
 import LoginPage from "./LoginPage";
 import SignupPage from "./SignupPage";
+import UserDataContextProvider from "./UserDataContext";
+import RestrictedRoute from "./RestrictedRoute";
 
 const App = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -28,13 +30,20 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container>
-        <BrowserRouter>
-          {/* <Route path="/" exact component={() => <>gfdgfd</>} /> */}
-          <Route path="/" exact component={() => <SignupPage />} />
-          <Route path="/login" exact component={() => <LoginPage />} />
-        </BrowserRouter>
-      </Container>
+      <UserDataContextProvider>
+        <Container>
+          <BrowserRouter>
+            <RestrictedRoute
+              path="/"
+              exact
+              RestrictedComponent={() => <>dashboard</>}
+              UnrestrictedComponent={() => <Redirect to="/login" />}
+            />
+            <Route path="/signup" exact component={() => <SignupPage />} />
+            <Route path="/login" exact component={() => <LoginPage />} />
+          </BrowserRouter>
+        </Container>
+      </UserDataContextProvider>
     </ThemeProvider>
   );
 };
