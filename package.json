@@ -35,11 +35,11 @@
   "scripts": {
     "start": "node server/app.js",
     "build": "react-scripts build",
-    "reactStart": "react-scripts start",
+    "reactDev": "react-scripts start",
     "reactTest": "react-scripts test",
     "reactEject": "react-scripts eject",
     "nodeDev": "nodemon server/app.js",
-    "dev": "concurrently \"npm run nodeDev\" \"npm run reactStart\""
+    "dev": "concurrently \"npm run nodeDev\" \"npm run reactDev\""
   },
   "eslintConfig": {
     "extends": [
@@ -59,8 +59,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000",
   "engines": {
     "node": "12.19.0"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }
