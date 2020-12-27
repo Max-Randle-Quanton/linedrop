@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Container, makeStyles } from "@material-ui/core";
+import { Container, makeStyles, Typography } from "@material-ui/core";
 import clsx from "clsx";
 import {
   fieldset,
@@ -10,7 +10,7 @@ import CardForm from "./CardForm";
 import Axios from "axios";
 import { UserDataContext } from "./UserDataContext";
 import { setStoredToken } from "../helpers";
-import { useHistory } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   flexColContainer: {
@@ -21,11 +21,11 @@ const useStyles = makeStyles((theme) => ({
   flexColItem: {
     marginBottom: theme.spacing(4),
   },
-  input: {
-    marginBottom: theme.spacing(1),
-  },
   center: {
     textAlign: "center",
+  },
+  link: {
+    color: theme.palette.text.primary,
   },
 }));
 
@@ -78,7 +78,14 @@ const LoginPage = () => {
         initialData={blankForm}
         buttonText="log in"
         onSubmit={handleLoginRequest}
+        className={classes.flexColItem}
       />
+      <Typography className={classes.flexColItem}>
+        Don't have an account?{" "}
+        <RouterLink className={classes.link} to="/signup">
+          Sign Up
+        </RouterLink>
+      </Typography>
     </Container>
   );
 };

@@ -10,7 +10,8 @@ export const loginFieldsetDescriptor = {
   username: {
     displayName: "Username",
     displayValue: (data) => data.username,
-    inputComponent: FreeTextInput,inputComponentProps: {
+    inputComponent: FreeTextInput,
+    inputComponentProps: {
       autoFocus: true,
     },
     validationTests: [
