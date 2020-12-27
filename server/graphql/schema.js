@@ -58,7 +58,7 @@ module.exports = buildSchema(`
         users: [User!]!
         groups: [Group]!
         login(username: String!, password: String!): AuthData!
-        verifyJwt(token: String!): User
+        verifyJwt: User!
 
         events: [Event!]!
         bookings: [Booking!]!

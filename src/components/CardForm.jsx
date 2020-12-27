@@ -43,7 +43,6 @@ const CardForm = ({
 
   return (
     <FormBase
-      {...rest}
       inputClassName={classes.input}
       fieldset={fieldset}
       initialData={initialData}
@@ -56,9 +55,9 @@ const CardForm = ({
         renderFields,
         renderButton,
         renderFeedback,
-        ...rest
+        ...wrapperRest
       }) => (
-        <Card {...rest}>
+        <Card {...rest} {...wrapperRest}>
           <CardHeader title={title} />
           <Divider />
           <CardContent>{renderFields}</CardContent>

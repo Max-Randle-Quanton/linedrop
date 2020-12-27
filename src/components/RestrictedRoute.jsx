@@ -13,42 +13,46 @@ const RestrictedRoute = ({
   const { userData, setUserData } = useContext(UserDataContext);
   const [loading, setLoading] = useState(true);
 
-  const verifyJWT = async () => {
-    try {
-      setLoading(true);
-      const res = await Axios({
-        mothod: "POST",
-        url: "/graphql",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `bearer ${getStoredToken()}`,
-        },
-      });
-      console.log(res);
-      const { username, userId } = res.data.data.verifyJwt;
-      setUserData({
-        username,
-        userId,
-        loggedIn: true,
-      });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (!userData.loggedId) {
+    const verifyJWT = async () => {
+      try {
+        setLoading(true);
+        const res = await Axios({
+          method: "POST",
+          url: "/graphql",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `bearer ${getStoredToken()}`,
+          },
+          data: JSON.stringify({
+            query: `
+              query {
+                verifyJwt {
+                  _id
+                  username
+                }
+              }
+            `,
+          }),
+        });
+
+        const { username, userId: _id } = res.data.data.verifyJwt;
+        setUserData({
+          username,
+          _id,
+          loggedIn: true,
+        });
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!userData.loggedIn) {
       verifyJWT();
     }
-  }, []);
-
-  //   return (
-  //     <Backdrop open>
-  //       <CircularProgress size={120} />
-  //     </Backdrop>
-  //   );
+  }, [userData.loggedIn, setUserData]);
 
   return loading ? (
     <Backdrop open>

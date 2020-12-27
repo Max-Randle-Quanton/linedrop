@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, makeStyles } from "@material-ui/core";
+import { Container, makeStyles, Typography } from "@material-ui/core";
 import clsx from "clsx";
 import {
   fieldset,
@@ -8,6 +8,7 @@ import {
 } from "./signupFieldsetDescriptor";
 import CardForm from "./CardForm";
 import Axios from "axios";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   flexColContainer: {
@@ -21,12 +22,14 @@ const useStyles = makeStyles((theme) => ({
   input: {
     marginBottom: theme.spacing(1),
   },
-  center: {
-    textAlign: "center",
+  link: {
+    color: theme.palette.text.primary,
   },
 }));
 
 const SignupPage = () => {
+  const history = useHistory();
+
   const handleSignupRequest = async (formData, onSuccess, onFail) => {
     try {
       await Axios({
@@ -48,6 +51,7 @@ const SignupPage = () => {
         }),
       });
       onSuccess();
+      history.push("/login");
     } catch (err) {
       onFail(err?.response?.data?.errors[0]?.message);
     }
@@ -63,7 +67,14 @@ const SignupPage = () => {
         initialData={blankForm}
         buttonText="sign up"
         onSubmit={handleSignupRequest}
+        className={classes.flexColItem}
       />
+      <Typography className={classes.flexColItem}>
+        Already have an account?{" "}
+        <RouterLink className={classes.link} to="/login">
+          Log In
+        </RouterLink>
+      </Typography>
     </Container>
   );
 };

@@ -64,7 +64,7 @@ const login = async ({ username, password }) => {
   }
 };
 
-const verifyJwt = async ({ token }, req) => {
+const verifyJwt = async (args, req) => {
   if (!req.isAuth) {
     throw new Error("Invalid Token");
   }
