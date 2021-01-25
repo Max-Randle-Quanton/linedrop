@@ -7,6 +7,7 @@ import LoginPage from "./LoginPage";
 import SignupPage from "./SignupPage";
 import UserDataContextProvider from "./UserDataContext";
 import RestrictedRoute from "./RestrictedRoute";
+import GroupList from "./GroupList";
 
 const App = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -36,7 +37,7 @@ const App = () => {
             <RestrictedRoute
               path="/"
               exact
-              RestrictedComponent={() => <>dashboard</>}
+              RestrictedComponent={() => <GroupList />}
               UnrestrictedComponent={() => <Redirect to="/login" />}
             />
             <Route path="/signup" exact component={() => <SignupPage />} />
